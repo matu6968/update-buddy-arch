@@ -2,7 +2,7 @@
 
 DIRECTORY="$(readlink -f "$(dirname "$0")")"
 
-#From pi-apps add_englich function
+#From pi-apps add_english function
 if [ "$(cat /usr/share/i18n/SUPPORTED | grep -o 'en_US.UTF-8' )" == "en_US.UTF-8" ]; then
   locale=$(locale -a | grep -oF 'en_US.utf8')
   if [ "$locale" != 'en_US.utf8' ]; then
@@ -22,7 +22,7 @@ while true;do
 
   failwait=1
   while true;do
-    output="$(sudo apt update 2>&1)"
+    output="$(sudo pacman -Sy 2>&1)"
     exitcode=$?
     if ! echo "$output" | grep -q 'Temporary failure resolving' ;then
       break
@@ -33,15 +33,15 @@ while true;do
     failwait=$((failwait*2)) #exponential retry: 1m, 2m, 4m, 8m, 16m...
   done
   
-  #inform user packages are upgradeable
-  if ! echo "$output" | grep -q 'can be upgraded' ;then
-    update=0
-  elif [ $exitcode != 0 ];then
+  #pacman dosen't display the number of available updates when running pacman -Sy, so it will only be detected if the list variable is empty 
+  if [ $exitcode != 0 ];then
     update=0
   fi
-  #only continue script if upgrades available
   
-  LIST="$(apt list --upgradable 2>/dev/null | cut -d/ -f 1 | tail -n +2 | grep -vx "$(dpkg --get-selections | grep "\<hold$" | tr -d ' \t' | sed 's/hold//g' | sed -z 's/\n/\\|/g' | sed -z 's/\\|$/\n/g')")"
+LIST=$(comm -23 \
+  <(pacman -Qu | cut -d ' ' -f 1 | sort) \
+  <(grep "^IgnorePkg" /etc/pacman.conf | cut -d '=' -f 2 | tr -s ' ' '\n' | sort))
+
   
   if [ -z "$LIST" ];then
     update=0
@@ -52,7 +52,7 @@ while true;do
     screen_height="$(xdpyinfo | grep 'dimensions:' | tr 'x' '\n' | tr ' ' '\n' | sed -n 8p)"
     
     yad --form --text='Update Buddy:
-APT updates available.' \
+pacman updates available.' \
       --on-top --skip-taskbar --undecorated --close-on-unfocus \
       --geometry=260+$((screen_width-262))+$((screen_height-150)) \
       --image="${DIRECTORY}/logo.png" \
@@ -72,7 +72,7 @@ APT updates available.' \
   fi
   
   if [ $update == 1 ];then
-    "${DIRECTORY}/terminal-run" 'sudo apt -y full-upgrade --allow-downgrades;echo "Closing in 10 seconds.";sleep 10' 'Upgrading packages'
+    "${DIRECTORY}/terminal-run" 'sudo pacman -Syu --noconfirm;echo "Closing in 10 seconds.";sleep 10' 'Upgrading packages'
   fi
   
   #echo "Waiting 12 hours"

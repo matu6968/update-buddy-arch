@@ -1,12 +1,10 @@
-# update-buddy
+# update-buddy (Arch Linux edition)
 Automatically check for updates on boot. If there are any, asks permission to upgrade.  
-![screenshot](https://github.com/Botspot/update-buddy/blob/main/screenshot.png?raw=true)
+![screenshot](https://github.com/matu6968/update-buddy-arch/blob/main/screenshot.png?raw=true)
 # To install:
-[![badge](https://github.com/Botspot/pi-apps/blob/master/icons/badge.png?raw=true)](https://github.com/Botspot/pi-apps)
-Or, to install manually:
 ```
-sudo apt install yad
-git clone https://github.com/Botspot/update-buddy
+sudo pacman -S yad
+git clone https://github.com/matu6968/update-buddy-arch
 mkdir ~/.config/autostart
 echo "[Desktop Entry]
 Name=Update Buddy
