@@ -8,7 +8,7 @@ git clone https://github.com/matu6968/update-buddy-arch
 mkdir ~/.config/autostart
 echo "[Desktop Entry]
 Name=Update Buddy
-Exec=$HOME/update-buddy/onstartup.sh
+Exec=$HOME/update-buddy-arch/onstartup.sh
 Type=Application
 X-GNOME-Autostart-enabled=true
 Hidden=false
