@@ -13,4 +13,7 @@ Type=Application
 X-GNOME-Autostart-enabled=true
 Hidden=false
 NoDisplay=false" > ~/.config/autostart/update-buddy.desktop
+# to enable passwordless sudo on pacman
+sudo touch /etc/sudoers.d/pacman
+sudo echo "ALL ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/pacman
 ```
